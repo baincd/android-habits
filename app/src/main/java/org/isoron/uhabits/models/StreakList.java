@@ -48,10 +48,25 @@ public abstract class StreakList
     public List<Streak> getBest(int limit)
     {
         List<Streak> streaks = getAll();
+        Streak currentStreak = findCurrentStreak(streaks);
         Collections.sort(streaks, (s1, s2) -> s2.compareLonger(s1));
         streaks = streaks.subList(0, Math.min(streaks.size(), limit));
+        if (!streaks.contains(currentStreak)) {
+            streaks.add(0, currentStreak);
+            streaks = streaks.subList(0, Math.min(streaks.size(), limit));
+        }
         Collections.sort(streaks, (s1, s2) -> s2.compareNewer(s1));
         return streaks;
+    }
+
+    private Streak findCurrentStreak(List<Streak> streakList) {
+        long yesterday = DateUtils.getStartOfToday() - DateUtils.millisecondsInOneDay;
+        for (Streak s : streakList) {
+            if (s.getEnd() >= yesterday) {
+                return s;
+            }
+        }
+        return Streak.noCurrentStreakInstance();
     }
 
     @Nullable

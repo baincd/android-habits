@@ -28,10 +28,22 @@ public final class Streak
 
     private final long end;
 
+    private final boolean isStreak;
+
     public Streak(long start, long end)
     {
+        this(start, end, true);
+    }
+
+    private Streak(long start, long end, boolean isStreak) {
         this.start = start;
         this.end = end;
+        this.isStreak = isStreak;
+    }
+
+    public static Streak noCurrentStreakInstance() {
+        long today = DateUtils.getStartOfToday();
+        return new Streak(today,today,false);
     }
 
     public int compareLonger(Streak other)
@@ -54,7 +66,7 @@ public final class Streak
 
     public long getLength()
     {
-        return (end - start) / DateUtils.millisecondsInOneDay + 1;
+        return (isStreak ? (end - start) / DateUtils.millisecondsInOneDay + 1 : 0);
     }
 
     public long getStart()
