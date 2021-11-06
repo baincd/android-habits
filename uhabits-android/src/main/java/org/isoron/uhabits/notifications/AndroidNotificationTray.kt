@@ -134,6 +134,7 @@ class AndroidNotificationTray
             .setWhen(reminderTime)
             .setShowWhen(true)
             .setOngoing(preferences.shouldMakeNotificationsSticky())
+            .setGroup("group" + habit.id)
 
         if (habit.isNumerical) {
             wearableExtender.addAction(enterAction)
