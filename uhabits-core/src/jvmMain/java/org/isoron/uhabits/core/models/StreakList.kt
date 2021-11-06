@@ -18,6 +18,7 @@
  */
 package org.isoron.uhabits.core.models
 
+import org.isoron.uhabits.core.utils.DateUtils
 import javax.annotation.concurrent.ThreadSafe
 import kotlin.math.min
 
@@ -25,13 +26,25 @@ import kotlin.math.min
 class StreakList {
     private val list = ArrayList<Streak>()
 
+    private val alwaysIncludeCurrentStreak: Boolean = true; // TODO Make setting
+    private val yesterday = DateUtils.getStartOfToday() - DateUtils.DAY_LENGTH
+
     @Synchronized
     fun getBest(limit: Int): List<Streak> {
-        list.sortWith { s1: Streak, s2: Streak -> s2.compareLonger(s1) }
+        list.sortWith(bestListComparator)
+        if (alwaysIncludeCurrentStreak && list.size > 0 && list[0].end.unixTime < yesterday) {
+            list.add(0, Streak(DateUtils.getToday(), DateUtils.getToday(), isEmptyStreak = true))
+        }
         return list.subList(0, min(list.size, limit)).apply {
             sortWith { s1: Streak, s2: Streak -> s2.compareNewer(s1) }
         }.toList()
     }
+
+    private val bestListComparator = Comparator<Streak> { s1, s2 -> when {
+        alwaysIncludeCurrentStreak && s1.end.unixTime >= yesterday -> -1
+        alwaysIncludeCurrentStreak && s2.end.unixTime >= yesterday -> 1
+        else -> s2.compareLonger(s1)
+    } }
 
     @Synchronized
     fun recompute(

@@ -23,6 +23,7 @@ import java.lang.Long.signum
 data class Streak(
     val start: Timestamp,
     val end: Timestamp,
+    val isEmptyStreak: Boolean = false,
 ) {
     fun compareLonger(other: Streak): Int {
         return if (length != other.length) signum(length - other.length.toLong())
@@ -34,5 +35,5 @@ data class Streak(
     }
 
     val length: Int
-        get() = start.daysUntil(end) + 1
+        get() = if (isEmptyStreak) 0 else start.daysUntil(end) + 1
 }
