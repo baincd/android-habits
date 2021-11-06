@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "org.isoron.uhabits",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 20003,
+      "versionName": "2.0.3-141-geb041bf6-baincd",
+      "outputFile": "uhabits-android-release.apk"
+    }
+  ],
+  "elementType": "File"
+}
